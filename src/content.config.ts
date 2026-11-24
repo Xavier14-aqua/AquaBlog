@@ -23,6 +23,7 @@ const journal = defineCollection({
   schema: z.object({
     title: z.string(),
     entryType: z.enum(['essay', 'fragment']).default('fragment'),
+    carousel: z.boolean().default(false),
     pubDate: z.coerce.date(),
     weather: z.string().optional(),
     bgm: z.string().optional(),

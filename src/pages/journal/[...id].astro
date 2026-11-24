@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import JournalCards from '../../components/JournalCards.astro';
 export async function getStaticPaths() {
   return (await getCollection('journal', ({ data }) => !data.draft)).map((entry) => ({
     params: { id: entry.id }, props: { entry },
@@ -13,5 +14,5 @@ const { Content } = await render(entry);
 const meta = [entry.data.weather, entry.data.bgm, entry.data.mood].filter((v): v is string => Boolean(v));
 ---
 <ArticleLayout title={entry.data.title} date={entry.data.pubDate} section="journal" meta={meta}>
-  <Content />
+  {entry.data.carousel ? <JournalCards><Content /></JournalCards> : <Content />}
 </ArticleLayout>
