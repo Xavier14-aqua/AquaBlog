@@ -1,0 +1,29 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../lib/content';
+interface Props {
+  title: string;
+  date: Date;
+  section: 'projects' | 'journal';
+  summary?: string;
+  meta?: string[];
+}
+const { title, date, section, summary, meta = [] } = Astro.props;
+const label = section === 'projects' ? '技术与项目' : '生活日记';
+---
+<BaseLayout title={`${title} // Aqua`} description={summary}>
+  <main id="main-content" class="mx-auto max-w-3xl px-6 py-12 sm:py-20">
+    <a class="text-sm text-klein underline underline-offset-4" href={`/${section}/`}>返回{label}</a>
+    <article class="mt-8">
+      <header class="border-b border-ink/15 pb-8">
+        <div class="mb-4 flex flex-wrap gap-3 text-sm text-muted">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          {meta.map((item) => <span>{item}</span>)}
+        </div>
+        <h1 class="text-3xl font-bold leading-snug tracking-tight sm:text-4xl">{title}</h1>
+        {summary && <p class="mt-5 text-base leading-8 text-muted">{summary}</p>}
+      </header>
+      <div class:list={['article-body mt-8', { 'journal-body': section === 'journal' }]}><slot /></div>
+    </article>
+  </main>
+</BaseLayout>

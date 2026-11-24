@@ -1,0 +1,170 @@
+---
+// 现代构成主义左侧视觉锚点：半调网点 + 1px 制图轨道 + 克莱因蓝飞鸟切片 + 1% 朱红星芒
+---
+
+<div class="relative mx-auto w-full max-w-[540px] select-none" aria-hidden="true">
+  <svg viewBox="0 0 560 420" class="h-auto w-full overflow-visible">
+    <defs>
+      <pattern id="halftone-dots" width="10" height="10" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.05" fill="#94a3b8" fill-opacity="0.45" />
+      </pattern>
+    </defs>
+
+    <!-- 图层 1：浅灰半调网点色块（最底层视差） -->
+    <g data-parallax="0.35">
+      <rect x="44" y="48" width="142" height="296" fill="url(#halftone-dots)" />
+      <rect x="18" y="138" width="330" height="84" fill="url(#halftone-dots)" opacity="0.65" />
+      <rect x="44" y="48" width="142" height="296" fill="none" stroke="#0f172a" stroke-opacity="0.12" stroke-width="1" />
+    </g>
+
+    <!-- 图层 2：1px 黑色制图线框与同心虚线轨道 -->
+    <g data-parallax="0.75">
+      <rect
+        data-hero-line
+        pathLength="100"
+        x="116"
+        y="96"
+        width="138"
+        height="198"
+        fill="none"
+        stroke="#0f172a"
+        stroke-width="1"
+        stroke-dasharray="100"
+      />
+      <line
+        data-hero-line
+        pathLength="100"
+        x1="12"
+        y1="268"
+        x2="510"
+        y2="46"
+        stroke="#0f172a"
+        stroke-opacity="0.5"
+        stroke-width="0.9"
+        stroke-dasharray="100"
+      />
+      <line
+        data-hero-line
+        pathLength="100"
+        x1="362"
+        y1="302"
+        x2="496"
+        y2="404"
+        stroke="#0f172a"
+        stroke-width="1"
+        stroke-dasharray="100"
+      />
+
+      <!-- 同心虚线圆环 -->
+      <circle
+        data-hero-orbit
+        cx="236"
+        cy="176"
+        r="112"
+        fill="none"
+        stroke="#0f172a"
+        stroke-width="1"
+        stroke-dasharray="4 6"
+      />
+      <circle
+        data-hero-orbit
+        cx="236"
+        cy="176"
+        r="74"
+        fill="none"
+        stroke="#0f172a"
+        stroke-opacity="0.55"
+        stroke-width="0.85"
+      />
+      <circle
+        data-hero-orbit
+        cx="316"
+        cy="262"
+        r="46"
+        fill="none"
+        stroke="#0f172a"
+        stroke-width="1"
+      />
+
+      <!-- 极细哑金圆弧点缀 -->
+      <path
+        data-hero-line
+        pathLength="100"
+        d="M 142 324 A 150 150 0 0 1 390 74"
+        fill="none"
+        stroke="#d4af37"
+        stroke-width="1.35"
+        stroke-dasharray="100"
+      />
+    </g>
+
+    <!-- 图层 3：克莱因蓝几何解构飞鸟与高速斜向矢量切片 -->
+    <g data-parallax="1.45">
+      <polygon
+        data-hero-shard
+        points="24,224 148,176 116,198 56,232"
+        fill="#1a4bff"
+      />
+      <polygon
+        data-hero-shard
+        points="118,166 218,130 190,152 142,174"
+        fill="#1a4bff"
+      />
+      <polygon
+        data-hero-shard
+        points="214,132 346,84 304,116 244,142"
+        fill="#1a4bff"
+      />
+      <polygon
+        data-hero-shard
+        points="356,92 522,34 452,72 372,102"
+        fill="#1a4bff"
+      />
+
+      <!-- 解构飞鸟剪影（锐利矢量折线） -->
+      <path
+        data-hero-shard
+        d="M 186 154 L 164 114 L 198 134 L 222 108 L 214 144 L 244 152 L 204 160 Z"
+        fill="#f6f8fc"
+        stroke="#0f172a"
+        stroke-width="1.25"
+      />
+      <path
+        data-hero-shard
+        d="M 270 124 L 254 80 L 284 106 L 314 78 L 298 122 L 328 134 L 282 138 Z"
+        fill="#f6f8fc"
+        stroke="#0f172a"
+        stroke-width="1.25"
+      />
+
+      <!-- 克莱因蓝实心几何锚点圆 -->
+      <circle data-hero-shard cx="164" cy="96" r="14" fill="#1a4bff" />
+      <circle data-hero-shard cx="226" cy="242" r="7.5" fill="#1a4bff" />
+      <circle data-hero-shard cx="410" cy="276" r="6.5" fill="#1a4bff" />
+    </g>
+
+    <!-- 图层 4：1% 朱红四角星芒与制图准星 -->
+    <g data-parallax="2.0">
+      <path
+        data-hero-star
+        d="M 110 74 Q 110 92 128 92 Q 110 92 110 110 Q 110 92 92 92 Q 110 92 110 74 Z"
+        fill="#e11d48"
+      />
+      <path
+        data-hero-star
+        d="M 358 144 Q 358 156 370 156 Q 358 156 358 168 Q 358 156 346 156 Q 358 156 358 144 Z"
+        fill="#1a4bff"
+      />
+      <path
+        data-hero-star
+        d="M 316 248 Q 316 258 326 258 Q 316 258 316 268 Q 316 258 306 258 Q 316 258 316 248 Z"
+        fill="#e11d48"
+      />
+
+      <!-- 微型制图标注 -->
+      <text x="122" y="310" fill="#52627a" font-family="var(--font-mono)" font-size="9" letter-spacing="2">
+        FIG.01 // BLUE DECONSTRUCTION
+      </text>
+    </g>
+  </svg>
+</div>

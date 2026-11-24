@@ -1,0 +1,79 @@
+---
+interface Props {
+  index: string;
+  tag: string;
+  title: string;
+  subtitle: string;
+  href: string;
+  variant?: 'pool' | 'overcast' | 'sky' | 'water';
+  image?: string;
+}
+
+const { index, tag, title, subtitle, href, variant = 'pool', image } = Astro.props;
+
+const artBgMap = {
+  pool: 'bg-[radial-gradient(circle_at_28%_22%,#e0f2fe_0%,#60a5fa_44%,#1a4bff_76%,#0f172a_100%)]',
+  overcast: 'bg-[linear-gradient(148deg,#dbeafe_0%,#3b82f6_48%,#1e3a8a_88%,#0f172a_100%)]',
+  sky: 'bg-[radial-gradient(ellipse_at_72%_78%,#93c5fd_0%,#2563eb_52%,#172554_100%)]',
+  water: 'bg-[linear-gradient(175deg,#eff6ff_0%,#60a5fa_56%,#1d4ed8_100%)]',
+};
+---
+
+<a
+  href={href}
+  data-dream-card
+  class="group relative block aspect-[4/3] overflow-hidden rounded-[20px] bg-blue-100 shadow-[0_22px_48px_-22px_rgba(26,75,255,0.28)] transition-shadow duration-500 hover:shadow-[0_28px_56px_-18px_rgba(26,75,255,0.42)]"
+>
+  <!-- 底层图像或蓝色梦核色块占位 -->
+  {
+    image ? (
+      <img
+        src={image}
+        alt={title}
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+      />
+    ) : (
+      <div class={`h-full w-full transition-transform duration-700 ease-out group-hover:scale-108 ${artBgMap[variant]}`}>
+        <!-- 模拟建筑色块与极细结构线 -->
+        <div class="absolute right-6 top-6 h-16 w-24 border border-white/25 bg-white/10 backdrop-blur-[2px]"></div>
+        <div class="absolute right-14 top-14 h-12 w-12 bg-klein/40"></div>
+      </div>
+    )
+  }
+
+  <!-- 梦核冷色调统一滤镜 + 底部可读性渐变 -->
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/10 to-transparent"></div>
+
+  <!-- 悬停浮现：1px 制图取景框四角 + 哑金细弧 -->
+  <span class="pointer-events-none absolute left-3 top-3 h-3 w-3 border-l border-t border-white/80 opacity-0 transition-all duration-300 group-hover:opacity-100"></span>
+  <span class="pointer-events-none absolute right-3 top-3 h-3 w-3 border-r border-t border-white/80 opacity-0 transition-all duration-300 group-hover:opacity-100"></span>
+  <span class="pointer-events-none absolute bottom-3 left-3 h-3 w-3 border-b border-l border-white/80 opacity-0 transition-all duration-300 group-hover:opacity-100"></span>
+  <span class="pointer-events-none absolute bottom-3 right-3 h-3 w-3 border-b border-r border-white/80 opacity-0 transition-all duration-300 group-hover:opacity-100"></span>
+
+  <svg
+    viewBox="0 0 100 100"
+    class="pointer-events-none absolute -right-4 -top-4 h-24 w-24 opacity-0 transition-all duration-500 group-hover:rotate-12 group-hover:opacity-90"
+    aria-hidden="true"
+  >
+    <path d="M 15 85 A 70 70 0 0 1 85 15" fill="none" stroke="#d4af37" stroke-width="1.2" />
+  </svg>
+
+  <!-- 左上角编号胶囊 -->
+  <div class="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-white/25 bg-klein/25 px-2.5 py-1 font-mono text-[10px] tracking-widest text-white backdrop-blur-md">
+    <span>{index}</span>
+    <span class="opacity-60">/</span>
+    <span>{tag}</span>
+  </div>
+
+  <!-- 底部标题区 -->
+  <div class="absolute inset-x-4 bottom-4 flex items-end justify-between gap-2 text-white">
+    <div>
+      <h3 class="text-base font-semibold tracking-wide">{title}</h3>
+      <p class="mt-0.5 text-xs text-white/75">{subtitle}</p>
+    </div>
+    <span class="font-mono text-xs opacity-70 transition-transform duration-300 group-hover:translate-x-1 group-hover:opacity-100">
+      →
+    </span>
+  </div>
+</a>

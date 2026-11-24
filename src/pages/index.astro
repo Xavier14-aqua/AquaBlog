@@ -1,0 +1,170 @@
+---
+import { getCollection } from 'astro:content';
+import { SITE } from '../data/site';
+import { entryUrl, formatDate } from '../lib/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IntroPaperCut from '../components/motion/IntroPaperCut.astro';
+import HeroCanvas from '../components/constructivism/HeroCanvas.astro';
+import DreamcoreCard from '../components/constructivism/DreamcoreCard.astro';
+const portals = SITE.portals;
+const [projects, journal] = await Promise.all([
+  getCollection('projects', ({ data }) => !data.draft),
+  getCollection('journal', ({ data }) => !data.draft),
+]);
+const recentEntries = [
+  ...projects.map((e) => ({ date: e.data.pubDate, category: e.data.kind === 'note' ? 'NOTE' : 'PROJECT', title: e.data.title, href: entryUrl('projects', e.id) })),
+  ...journal.map((e) => ({ date: e.data.pubDate, category: 'JOURNAL', title: e.data.title, href: entryUrl('journal', e.id) })),
+].sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0, 6);
+
+---
+
+<BaseLayout title={SITE.title}>
+  <!-- 三段式蓝点与纸张锥形划开开场 -->
+  <IntroPaperCut />
+
+  <main id="main-content" class="mx-auto max-w-6xl px-6 pb-28 pt-10 sm:pt-16">
+    <!-- 一、首屏 Hero：左重构动态画布 + 中右 Aqua 个人信息 -->
+    <section
+      data-hero-stage
+      class="grid min-h-[54vh] grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8"
+    >
+      <div class="order-2 lg:order-1 lg:col-span-6">
+        <HeroCanvas />
+      </div>
+
+      <div class="order-1 lg:order-2 lg:col-span-6 lg:pl-10">
+        <p
+          data-hero-text
+          class="mb-4 font-mono text-xs tracking-[0.22em] text-klein uppercase"
+        >
+          {SITE.kicker}
+        </p>
+
+        <h1
+          data-hero-text
+          class="text-5xl font-bold tracking-tight text-ink sm:text-6xl"
+        >
+          {SITE.name}
+        </h1>
+
+        <!-- 核心座右铭 -->
+        <p
+          data-hero-text
+          class="mt-5 flex items-center gap-3 text-lg font-medium tracking-wide text-ink/90 sm:text-xl"
+        >
+          <span class="inline-block h-5 w-1 bg-klein"></span>
+          <span>{SITE.motto}</span>
+        </p>
+
+        <p
+          data-hero-text
+          class="mt-5 max-w-md text-[15px] leading-8 text-muted"
+        >
+          {SITE.bio}
+        </p>
+
+        <!-- 极简外部链接（替换成你的真实链接） -->
+        <div data-hero-text class="mt-7 flex flex-wrap items-center gap-4 font-mono text-xs">
+          <a
+            href={SITE.socials.find((s) => s.label === 'GITHUB')?.href}
+            target="_blank"
+            rel="noreferrer"
+            class="border border-ink/20 px-4 py-2 text-ink transition-colors duration-200 hover:border-klein hover:bg-klein hover:text-white"
+          >
+            GITHUB ↗
+          </a>
+          <a
+            href="/projects"
+            class="border border-klein bg-klein px-4 py-2 text-white transition-colors duration-200 hover:bg-klein-deep"
+          >
+            VIEW PROJECTS →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 二、下方 4 张蓝色梦核圆角卡片入口 -->
+    <section class="mt-14 sm:mt-20" aria-label="核心专栏入口">
+      <div class="mb-5 flex items-center justify-between font-mono text-[11px] tracking-[0.2em] text-muted">
+        <span>PORTALS // 04 SECTIONS</span>
+        <span>HOVER TO INSPECT</span>
+      </div>
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {portals.map((card) => <DreamcoreCard {...card} />)}
+      </div>
+    </section>
+
+    <!-- 三、滚动联动“万物有序”横向对称几何分隔带 -->
+    <section data-construct-divider class="my-20 overflow-hidden py-4" aria-hidden="true">
+      <svg viewBox="0 0 1000 120" class="h-auto w-full">
+        <!-- 左翼几何 -->
+        <g data-divider-left>
+          <line x1="20" y1="60" x2="430" y2="60" stroke="#0f172a" stroke-opacity="0.2" stroke-width="1" />
+          <path d="M 110 60 Q 250 14 420 56" fill="none" stroke="#1a4bff" stroke-width="1" stroke-dasharray="3 5" />
+          <polygon points="310,60 355,34 355,86" fill="none" stroke="#1a4bff" stroke-width="1.2" />
+          <rect x="220" y="54" width="12" height="12" fill="#1a4bff" />
+        </g>
+
+        <!-- 右翼几何 -->
+        <g data-divider-right>
+          <line x1="570" y1="60" x2="980" y2="60" stroke="#0f172a" stroke-opacity="0.2" stroke-width="1" />
+          <path d="M 890 60 Q 750 106 580 64" fill="none" stroke="#1a4bff" stroke-width="1" stroke-dasharray="3 5" />
+          <polygon points="690,60 645,34 645,86" fill="none" stroke="#1a4bff" stroke-width="1.2" />
+          <rect x="768" y="54" width="12" height="12" fill="#1a4bff" />
+        </g>
+
+        <!-- 中心随滚动旋转的虚线圆环 + 三角构成 -->
+        <g data-divider-ring>
+          <circle cx="500" cy="60" r="38" fill="none" stroke="#0f172a" stroke-width="1" stroke-dasharray="4 6" />
+          <circle cx="500" cy="60" r="24" fill="none" stroke="#d4af37" stroke-width="1.1" />
+        </g>
+        <polygon points="500,26 530,78 470,78" fill="none" stroke="#1a4bff" stroke-width="1.3" />
+        <circle cx="500" cy="60" r="4.5" fill="#e11d48" />
+      </svg>
+    </section>
+
+    <!-- 四、瑞士网格最新动态归档（悬停极速克莱因蓝反白） -->
+    <section aria-label="最新动态">
+      <div class="mb-4 flex items-end justify-between border-b border-ink pb-3">
+        <div>
+          <p class="font-mono text-[11px] tracking-[0.2em] text-klein">INDEX // RECENT UPDATES</p>
+          <h2 class="mt-1 text-2xl font-bold tracking-tight">近期归档</h2>
+        </div>
+        <span class="font-mono text-xs text-muted">{recentEntries.length} ITEMS</span>
+      </div>
+
+      <div class="divide-y divide-ink/15 border-b border-ink/15">
+        {
+          recentEntries.map((item) => (
+            <a
+              href={item.href}
+              class="group grid grid-cols-12 items-center gap-3 px-3 py-4 transition-colors duration-150 hover:bg-klein hover:text-white"
+            >
+              <span class="col-span-4 font-mono text-xs text-muted transition-colors group-hover:text-white/80 sm:col-span-2">
+                {formatDate(item.date)}
+              </span>
+              <span class="col-span-8 font-mono text-[11px] tracking-widest text-klein transition-colors group-hover:text-white sm:col-span-2">
+                [{item.category}]
+              </span>
+              <span class="col-span-11 text-[15px] font-medium sm:col-span-7">
+                {item.title}
+              </span>
+              <span class="col-span-1 text-right font-mono text-xs text-accent-red opacity-0 transition-opacity duration-150 group-hover:text-white group-hover:opacity-100">
+                ✦
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <!-- 右下角重播开场按钮 -->
+  <button
+    id="replay-intro-btn"
+    type="button"
+    class="fixed bottom-6 right-6 z-40 cursor-pointer rounded-full border border-klein/25 bg-paper/85 px-4 py-2 font-mono text-[11px] tracking-widest text-klein backdrop-blur-md transition-colors duration-200 hover:bg-klein hover:text-white"
+  >
+    REPLAY INTRO
+  </button>
+</BaseLayout>

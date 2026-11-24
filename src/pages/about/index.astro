@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../data/site';
+---
+
+<BaseLayout title="关于与此刻 // Aqua">
+  <main id="main-content" class="mx-auto max-w-4xl px-6 pb-28 pt-12">
+    <header class="border-b border-ink pb-6">
+      <p class="font-mono text-xs tracking-[0.22em] text-klein">04 // ABOUT &amp; NOW</p>
+      <h1 class="mt-2 text-4xl font-bold tracking-tight">{SITE.name}</h1>
+      <p class="mt-3 flex items-center gap-3 text-lg font-medium text-ink/90">
+        <span class="inline-block h-4 w-1 bg-klein"></span>
+        <span>{SITE.motto}</span>
+      </p>
+      <p class="mt-3 text-[15px] leading-8 text-muted">{SITE.bio}</p>
+    </header>
+
+    <!-- NOW 此刻状态 -->
+    <section class="mt-10 border border-ink/15 bg-white/75 p-6">
+      <div class="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-klein">
+        <span class="h-2 w-2 animate-pulse rounded-full bg-accent-red"></span>
+        <span>NOW // 此刻状态</span>
+      </div>
+      <ul class="mt-4 space-y-3 text-sm leading-7 text-ink/90">
+        {
+          SITE.now.map((item) => (
+            <li class="flex flex-wrap items-baseline gap-3">
+              <span class="font-mono text-[11px] font-semibold tracking-wider text-klein">
+                [{item.tag}]
+              </span>
+              <span>{item.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <!-- 社交联络矩阵 -->
+    <section class="mt-12">
+      <h2 class="mb-4 font-mono text-xs tracking-[0.2em] text-muted">CONNECT // 联络方式</h2>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {
+          SITE.socials.map((s) => (
+            <a
+              href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel={s.href.startsWith('http') ? 'noreferrer' : undefined}
+              class="group flex items-center justify-between border border-ink/15 bg-white/60 px-4 py-3.5 transition-colors duration-150 hover:border-klein hover:bg-klein hover:text-white"
+            >
+              <div>
+                <div class="font-mono text-[10px] tracking-widest text-muted group-hover:text-white/75">
+                  {s.label}
+                </div>
+                <div class="mt-0.5 font-mono text-sm font-medium">{s.handle}</div>
+              </div>
+              <span class="font-mono text-xs">↗</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 友链预留位 -->
+    <section class="mt-12">
+      <h2 class="mb-4 font-mono text-xs tracking-[0.2em] text-muted">LINKS // 邻居与友链</h2>
+      <div class="border border-dashed border-ink/20 bg-white/40 px-5 py-8 text-center font-mono text-xs text-muted">
+        // 虚位以待，欢迎交换友链
+      </div>
+    </section>
+  </main>
+</BaseLayout>

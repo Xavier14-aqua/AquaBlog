@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+export async function getStaticPaths() {
+  return (await getCollection('projects', ({ data }) => !data.draft)).map((entry) => ({
+    params: { id: entry.id }, props: { entry },
+  }));
+}
+interface Props { entry: CollectionEntry<'projects'> }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<ArticleLayout title={entry.data.title} summary={entry.data.summary} date={entry.data.pubDate} section="projects" meta={entry.data.stack}>
+  {entry.data.highlights.length > 0 && <ul>{entry.data.highlights.map((point) => <li>{point}</li>)}</ul>}
+  <Content />
+  {!(entry.body || '').trim() && <p class="text-muted">项目正文整理中。</p>}
+  {(entry.data.repoUrl || entry.data.demoUrl) && <div class="mt-10 flex flex-wrap gap-5 border-t border-ink/15 pt-6">
+    {entry.data.repoUrl && <a href={entry.data.repoUrl} target="_blank" rel="noreferrer">查看源码</a>}
+    {entry.data.demoUrl && <a href={entry.data.demoUrl} target="_blank" rel="noreferrer">访问演示</a>}
+  </div>}
+</ArticleLayout>

@@ -1,0 +1,89 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import 'lenis/dist/lenis.css';
+import { SITE } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = SITE.title,
+  description = SITE.bio,
+} = Astro.props;
+
+const navLinks = [
+  { href: '/projects', label: 'PROJECTS', zh: '项目' },
+  { href: '/curations', label: 'CURATIONS', zh: '收藏' },
+  { href: '/journal', label: 'JOURNAL', zh: '日记' },
+  { href: '/about', label: 'ABOUT', zh: '关于' },
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {Astro.site && <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#f6f8fc" />
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen bg-paper text-ink overflow-x-hidden selection:bg-klein selection:text-white">
+    <a href="#main-content" class="skip-link">跳转到正文</a>
+    <!-- 全站极轻纸张颗粒层 -->
+    <div class="paper-grain" aria-hidden="true"></div>
+
+    <!-- 顶部瑞士网格制图导航栏 -->
+    <header class="sticky top-0 z-40 border-b border-ink/10 bg-paper/80 backdrop-blur-md">
+      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
+        <a href="/" class="group flex items-center gap-2.5 font-mono text-xs tracking-[0.2em] font-semibold">
+          <span class="h-2.5 w-2.5 rounded-full bg-klein transition-transform duration-300 group-hover:scale-125"></span>
+          <span>{SITE.name.toUpperCase()}</span>
+          <span class="hidden text-muted/60 sm:inline">// ARCHIVE</span>
+        </a>
+
+        <div
+          id="coord-hud"
+          class="hidden font-mono text-[11px] tracking-widest text-muted/75 md:block"
+          aria-hidden="true"
+        >
+          X:0000.0 / Y:0000.0
+        </div>
+
+        <nav aria-label="主导航" class="flex items-center gap-5 sm:gap-7">
+          {
+            navLinks.map((item) => (
+              <a
+                href={item.href + '/'}
+                aria-current={Astro.url.pathname.startsWith(item.href) ? 'page' : undefined}
+                class="group relative font-mono text-xs tracking-wider text-ink/80 transition-colors hover:text-klein"
+              >
+                <span class="hidden sm:inline">{item.label}</span>
+                <span class="sm:hidden">{item.zh}</span>
+                <span class="absolute -bottom-1 left-0 h-[1.5px] w-0 bg-klein transition-all duration-200 group-hover:w-full" />
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 border-t border-ink/10 px-6 py-8 text-sm text-muted">
+      <span>© {new Date().getFullYear()} {SITE.name}</span><span>{SITE.motto}</span>
+    </footer>
+    <script>
+      import '../scripts/motion-lifecycle';
+    </script>
+  </body>
+</html>

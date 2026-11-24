@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { CURATION_ITEMS } from '../../data/site';
+
+const tabs = [
+  { key: 'all', label: 'ALL', zh: '全部' },
+  { key: 'book', label: 'BOOKS', zh: '书籍' },
+  { key: 'movie', label: 'MOVIES', zh: '电影' },
+  { key: 'music', label: 'MUSIC', zh: '音乐' },
+  { key: 'art', label: 'ART', zh: '艺术' },
+];
+
+const catBadge: Record<string, string> = {
+  book: 'BOOK // 书籍',
+  movie: 'MOVIE // 电影',
+  music: 'MUSIC // 音乐',
+  art: 'ART // 艺术',
+};
+---
+
+<BaseLayout title="防空洞 · 我的收藏夹 // Aqua">
+  <main id="main-content" class="mx-auto max-w-6xl px-6 pb-28 pt-12">
+    <header class="border-b border-ink pb-6">
+      <p class="font-mono text-xs tracking-[0.22em] text-klein">02 // SHELTER · CURATIONS</p>
+      <div class="mt-2 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 class="text-4xl font-bold tracking-tight">防空洞</h1>
+          <p class="mt-1.5 text-sm text-muted">我的收藏夹 — 安放那些曾经撬动过我的文学、电影、音乐与艺术。</p>
+        </div>
+        <span class="font-mono text-xs text-muted">{CURATION_ITEMS.length} ARCHIVED</span>
+      </div>
+    </header>
+
+    <!-- 分类筛选条 -->
+    <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="收藏分类筛选">
+      {
+        tabs.map((tab, i) => (
+          <button
+            type="button"
+            data-filter-btn={tab.key}
+            aria-pressed={i === 0 ? "true" : "false"}
+            class={`cursor-pointer border px-4 py-1.5 font-mono text-xs tracking-wider transition-colors duration-150 ${
+              i === 0
+                ? 'border-klein bg-klein text-white'
+                : 'border-ink/20 bg-transparent text-ink hover:border-klein hover:text-klein'
+            }`}
+          >
+            {tab.zh} <span class="opacity-65">/ {tab.label}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <!-- 图鉴卡片墙 -->
+    <section
+      id="curation-grid"
+      class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      {
+        CURATION_ITEMS.map((item, idx) => (
+          <article
+            data-curation-card={item.category}
+            class="group relative flex min-h-[148px] flex-col justify-between border border-ink/15 bg-white/75 p-5 transition-all duration-150 hover:border-klein hover:bg-klein hover:text-white"
+          >
+            <div class="flex items-center justify-between font-mono text-[10px] tracking-widest">
+              <span class="text-klein group-hover:text-white/85">{catBadge[item.category]}</span>
+              <span class="text-muted group-hover:text-white/60">
+                #{String(idx + 1).padStart(2, '0')}
+              </span>
+            </div>
+
+            <div class="mt-4">
+              <h2 class="text-lg font-bold tracking-tight">{item.title}</h2>
+              {item.creator && (
+                <p class="mt-0.5 font-mono text-xs text-muted group-hover:text-white/75">
+                  — {item.creator}
+                </p>
+              )}
+              {item.note && (
+                <p class="mt-3 text-xs leading-6 text-ink/80 group-hover:text-white/90">
+                  {item.note}
+                </p>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </section>
+
+    <!-- 艺术类目空状态占位（点击艺术且暂无数据时显示） -->
+    <div
+      id="curation-empty" role="status" aria-live="polite"
+      class="mt-8 hidden border border-dashed border-ink/20 bg-white/40 px-6 py-12 text-center font-mono text-xs text-muted"
+    >
+      艺术收藏整理中，之后在这里慢慢补齐。
+    </div>
+  </main>
+
+  <script>
+    function bindCurationFilters() {
+      const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter-btn]');
+      const cards = document.querySelectorAll<HTMLElement>('[data-curation-card]');
+      const emptyBox = document.getElementById('curation-empty');
+      if (!buttons.length) return;
+
+      buttons.forEach((btn) => {
+        btn.onclick = () => {
+          const target = btn.dataset.filterBtn || 'all';
+          buttons.forEach((b) => {
+            const active = b === btn;
+            b.setAttribute('aria-pressed', String(active));
+            b.classList.toggle('border-klein', active);
+            b.classList.toggle('bg-klein', active);
+            b.classList.toggle('text-white', active);
+            b.classList.toggle('border-ink/20', !active);
+            b.classList.toggle('bg-transparent', !active);
+            b.classList.toggle('text-ink', !active);
+          });
+
+          let visibleCount = 0;
+          cards.forEach((card) => {
+            const match = target === 'all' || card.dataset.curationCard === target;
+            card.classList.toggle('hidden', !match);
+            if (match) visibleCount++;
+          });
+          emptyBox?.classList.toggle('hidden', visibleCount > 0);
+        };
+      });
+    }
+
+    document.addEventListener('astro:page-load', bindCurationFilters);
+  </script>
+</BaseLayout>

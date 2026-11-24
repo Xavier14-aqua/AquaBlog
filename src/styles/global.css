@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f6f8fc;
+  --color-klein: #1a4bff;
+  --color-klein-deep: #1e3a8a;
+  --color-ink: #0f172a;
+  --color-muted: #52627a;
+  --color-accent-red: #e11d48;
+  --color-accent-gold: #d4af37;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-klein);
+    color: #ffffff;
+  }
+}
+
+/* 全站微距纸张纤维颗粒层 */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* 开场蓝点扩张关键帧 */
+.blue-dot-layer {
+  background: radial-gradient(circle at 50% 45%, #2563eb 0%, #1a4bff 66%, #1e3a8a 100%);
+  clip-path: circle(8px at 50% 50%);
+  will-change: clip-path;
+}
+
+.blue-dot-layer.is-expanding {
+  animation: expandBlueDot 0.86s forwards;
+}
+
+@keyframes expandBlueDot {
+  0% {
+    clip-path: circle(8px at 50% 50%);
+    animation-timing-function: ease-out;
+  }
+  18% {
+    clip-path: circle(12px at 50% 50%);
+    animation-timing-function: cubic-bezier(0.82, 0, 0.18, 1);
+  }
+  100% {
+    clip-path: circle(150% at 50% 50%);
+  }
+}
+
+.is-skipped {
+  display: none !important;
+}
+
+html { scrollbar-color: #1a4bff #f6f8fc; scroll-padding-top: 5rem; }
+body { line-height: 1.6; }
+a, button { -webkit-tap-highlight-color: transparent; }
+a[aria-current="page"] { color: var(--color-klein); }
+:focus-visible { outline: 2px solid var(--color-klein); outline-offset: 5px; }
+.skip-link { position: fixed; left: 1rem; top: -8rem; z-index: 120; background: var(--color-paper); padding: .75rem 1rem; color: var(--color-klein); }
+.skip-link:focus { top: 1rem; }
+.article-body { font-size: 1rem; line-height: 1.95; overflow-wrap: anywhere; }
+.article-body > * + * { margin-top: 1.25rem; }
+.article-body h2 { margin-top: 2.5rem; font-size: 1.5rem; font-weight: 700; line-height: 1.5; }
+.article-body h3 { margin-top: 2rem; font-size: 1.25rem; font-weight: 600; }
+.article-body a { color: var(--color-klein); text-decoration: underline; text-underline-offset: 4px; }
+.article-body ul { list-style: disc; padding-left: 1.5rem; }
+.article-body ol { list-style: decimal; padding-left: 1.5rem; }
+.article-body li + li { margin-top: .5rem; }
+.article-body blockquote { border: 1px solid #52627a40; padding: 1rem 1.5rem; color: var(--color-muted); }
+.article-body pre { overflow-x: auto; padding: 1.25rem; border-radius: .5rem; font-size: .875rem; }
+.article-body code { font-family: var(--font-mono); }
+.article-body :not(pre) > code { background: #1a4bff0c; padding: .15rem .3rem; border-radius: .2rem; }
+.article-body img { max-width: 100%; height: auto; border-radius: .5rem; }
+.article-body table { display: block; overflow-x: auto; border-collapse: collapse; }
+.article-body th, .article-body td { border: 1px solid #52627a40; padding: .5rem .75rem; }
+.journal-body p { white-space: pre-line; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  #intro-overlay, #replay-intro-btn { display: none !important; }
+}
