@@ -9,35 +9,24 @@
 >
   <!-- 阶段一：中央蓝色圆点扩展为哑光蓝艺术纸面 -->
   <div id="intro-blue-dot" class="blue-dot-layer absolute inset-0">
-    <div
-      class="absolute inset-0 opacity-10 mix-blend-overlay"
-      style="background-image: url(&quot;data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"
-    ></div>
   </div>
 
   <!-- 阶段二 & 三：右上角纸张锥形划开 SVG 图层 -->
   <svg id="intro-slash-svg" class="pointer-events-none absolute inset-0 h-full w-full">
     <defs>
-      <filter id="paper-edge" filterUnits="userSpaceOnUse" x="-5%" y="-5%" width="110%" height="110%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.042" numOctaves="3" seed="11" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.4" xChannelSelector="R" yChannelSelector="G" />
-      </filter>
 
-      <filter id="cut-shadow-blur" filterUnits="userSpaceOnUse" x="-5%" y="-5%" width="110%" height="110%">
-        <feGaussianBlur stdDeviation="5.5" />
-      </filter>
 
       <clipPath id="cutClip">
         <path id="cutClipPath" d="" />
       </clipPath>
     </defs>
 
-    <g filter="url(#paper-edge)">
+    <g>
       <path id="cutFill" d="" fill="#f6f8fc" />
 
-      <g clip-path="url(#cutClip)" filter="url(#cut-shadow-blur)">
-        <path id="shadowTop" d="" fill="none" stroke="#0f172a" stroke-opacity="0.3" stroke-width="14" stroke-linecap="round" />
-        <path id="shadowBot" d="" fill="none" stroke="#0f172a" stroke-opacity="0.22" stroke-width="12" stroke-linecap="round" />
+      <g clip-path="url(#cutClip)">
+        <path id="shadowTop" d="" fill="none" stroke="#0f172a" stroke-opacity="0.12" stroke-width="14" stroke-linecap="round" />
+        <path id="shadowBot" d="" fill="none" stroke="#0f172a" stroke-opacity="0.08" stroke-width="12" stroke-linecap="round" />
       </g>
 
       <path id="bevelTop" d="" fill="none" stroke="#e0f2fe" stroke-opacity="0.92" stroke-width="2.2" stroke-linecap="round" />

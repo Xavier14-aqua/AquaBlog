@@ -10,6 +10,8 @@ const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 let introGuard: ReturnType<typeof setTimeout> | null = null;
 let removeReplayListener: (() => void) | null = null;
 let heroTimeline: gsap.core.Timeline | null = null;
+let introActive = false;
+let heroEntering = false;
 let revealGuard: ReturnType<typeof setTimeout> | null = null;
 
 let ctx: gsap.Context | null = null;
@@ -24,7 +26,7 @@ function hideHeroBeforeIntro() {
   gsap.set('[data-hero-orbit]', { opacity: 0, rotate: -22, transformOrigin: '50% 50%' });
   gsap.set('[data-hero-shard]', { opacity: 0, x: -34, y: 22, scale: 0.92 });
   gsap.set('[data-hero-star]', { opacity: 0, scale: 0, rotate: -45, transformOrigin: '50% 50%' });
-  gsap.set('[data-hero-text]', { opacity: 0, y: 20, filter: 'blur(6px)' });
+  gsap.set('[data-hero-text]', { opacity: 0, y: 20 });
   gsap.set('[data-dream-card]', { opacity: 0, y: 28, scale: 0.96 });
 }
 
@@ -32,7 +34,11 @@ export function playHeroReveal(baseDelay = 0) {
   if (!document.querySelector('[data-hero-stage]')) return;
 
   heroTimeline?.kill();
-  const tl = gsap.timeline({ paused: true, delay: baseDelay });
+  heroEntering = true;
+  const tl = gsap.timeline({ paused: true, delay: baseDelay, onComplete: () => {
+    heroEntering = false;
+    if (revealGuard !== null) { clearTimeout(revealGuard); revealGuard = null; }
+  } });
   heroTimeline = tl;
 
   // 第 1 拍：1px 黑色制图线与虚线轨道先行绘出
@@ -65,7 +71,6 @@ export function playHeroReveal(baseDelay = 0) {
       {
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
         duration: 0.72,
         stagger: 0.11,
         ease: 'power3.out',
@@ -83,7 +88,7 @@ export function playHeroReveal(baseDelay = 0) {
   revealGuard = setTimeout(() => {
     tl.progress(1);
     revealGuard = null;
-  }, 3000);
+  }, Math.ceil((tl.totalDuration() + baseDelay) * 1000) + 1500);
 }
 
 function setupMouseParallaxAndHud() {
@@ -100,6 +105,7 @@ function setupMouseParallaxAndHud() {
       }));
 
   const onMove = (e: MouseEvent) => {
+    if (introActive || heroEntering) return;
     if (hud) {
       const xStr = e.clientX.toFixed(1).padStart(6, '0');
       const yStr = e.clientY.toFixed(1).padStart(6, '0');
@@ -126,6 +132,7 @@ function hasPlayedIntro() {
 }
 
 function finishIntro() {
+  introActive = false;
   if (introGuard !== null) { clearTimeout(introGuard); introGuard = null; }
   stopIntro();
   document.getElementById('intro-overlay')?.classList.add('is-skipped');
@@ -135,6 +142,7 @@ function finishIntro() {
 }
 
 function beginIntro() {
+  introActive = true;
   stopIntro();
   if (introGuard !== null) clearTimeout(introGuard);
   // Schedule recovery before hiding content so an interrupted intro cannot block reading.
@@ -192,6 +200,8 @@ function initMotion() {
 }
 
 function cleanupMotion() {
+  introActive = false;
+  heroEntering = false;
   if (revealGuard !== null) { clearTimeout(revealGuard); revealGuard = null; }
   heroTimeline?.kill(); heroTimeline = null;
   if (introGuard !== null) { clearTimeout(introGuard); introGuard = null; }

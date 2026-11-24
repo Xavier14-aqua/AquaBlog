@@ -6,7 +6,7 @@ export const SITE = {
   bio: '做点小玩意，学点小技术，看点大世界，传递大爱心。',
   now: [
     { tag: 'LEARNING', text: '正在深入学习 AI Agent 与 AI Native 应用架构' },
-    { tag: 'BUILDING', text: '持续迭代 DSH Memory，并打磨个人蓝色梦核博客' },
+    { tag: 'BUILDING', text: '持续迭代 DSH Memory' },
   ],
   socials: [
     { label: 'GITHUB', handle: 'Xavier14-aqua', href: 'https://github.com/Xavier14-aqua' },
@@ -35,7 +35,7 @@ export const SITE = {
       index: '03',
       tag: 'JOURNAL',
       title: '生活日记',
-      subtitle: '长日记归档 · 碎片时间轴',
+      subtitle: '长日记 · 碎片',
       href: '/journal',
       variant: 'sky' as const,
     },
@@ -77,12 +77,12 @@ export const CURATION_ITEMS: CurationItem[] = [
   { title: '宇宙探索编辑部', creator: '孔大山', category: 'movie' },
 
   // 音乐
-  { title: '坂本龙一', category: 'music', note: '克制、清澈，像落在水面上的月光。' },
+  { title: '坂本龙一', category: 'music', note: '水' },
   { title: 'RADWIMPS', category: 'music' },
   { title: '洛天依', category: 'music' },
   { title: '初音未来', category: 'music' },
   { title: 'Taylor Swift', category: 'music' },
   { title: 'Sabrina Carpenter', category: 'music' },
-  { title: 'KAFU（可不）', category: 'music' },
-  { title: 'ヰ世界情緒（异世界情绪）', category: 'music' },
+  { title: 'KAFU', category: 'music' },
+  { title: 'ヰ世界情緒', category: 'music' },
 ];

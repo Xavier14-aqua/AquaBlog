@@ -1,6 +1,7 @@
 
   let rafId: number | null = null;
   let slashTimer: number | null = null;
+  let dotAnimation: Animation | null = null;
 
   const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
   const easeInOutQuart = (t: number) =>
@@ -8,6 +9,9 @@
   const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
   export function stopIntro() {
+    dotAnimation?.cancel();
+    dotAnimation = null;
+    document.documentElement.classList.remove("intro-running");
     if (rafId !== null) {
       cancelAnimationFrame(rafId);
       rafId = null;
@@ -42,23 +46,23 @@
     paths.forEach((p) => p.setAttribute('d', ''));
 
     overlay.classList.remove('is-skipped', 'opacity-0', 'invisible', 'pointer-events-none');
-    blueDot.classList.remove('is-expanding');
-    void blueDot.offsetWidth;
-    blueDot.classList.add('is-expanding');
+    document.documentElement.classList.add('intro-running');
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const L = Math.hypot(W, H);
+    const ux = -W / L, uy = H / L, nx = -H / L, ny = -W / L;
+    dotAnimation = blueDot.animate([
+      { transform: 'scale(1)', offset: 0 },
+      { transform: 'scale(1.5)', offset: .15 },
+      { transform: 'scale(' + (Math.ceil(L / 16) + 1) + ')', offset: 1 },
+    ], { duration: 720, easing: 'cubic-bezier(.65,0,.2,1)', fill: 'forwards' });
 
     const renderSlash = (
-      W: number,
-      H: number,
       tipRatio: number,
       halfWidthRatio: number,
       pinch: number,
       shadowWidth: number
     ) => {
-      const L = Math.hypot(W, H);
-      const ux = -W / L;
-      const uy = H / L;
-      const nx = -H / L;
-      const ny = -W / L;
 
       const toXY = (s: number, t: number): [string, string] => [
         (W + s * ux + t * nx).toFixed(1),
@@ -93,8 +97,6 @@
     };
 
     slashTimer = window.setTimeout(() => {
-      const W = window.innerWidth;
-      const H = window.innerHeight;
       svgEl.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
       const SLASH_MS = 400;
@@ -107,13 +109,13 @@
         const elapsed = now - start;
         if (elapsed <= SLASH_MS) {
           const p = easeOutExpo(elapsed / SLASH_MS);
-          renderSlash(W, H, lerp(0.02, 0.86, p), lerp(0.002, 0.056, p), 0.14, lerp(6, 13, p));
+          renderSlash(lerp(0.02, 0.86, p), lerp(0.002, 0.056, p), 0.14, lerp(6, 13, p));
         } else if (elapsed <= SLASH_MS + HOLD_MS) {
           const p = (elapsed - SLASH_MS) / HOLD_MS;
-          renderSlash(W, H, lerp(0.86, 0.9, p), lerp(0.056, 0.068, p), lerp(0.14, 0.17, p), lerp(13, 15, p));
+          renderSlash(lerp(0.86, 0.9, p), lerp(0.056, 0.068, p), lerp(0.14, 0.17, p), lerp(13, 15, p));
         } else if (elapsed <= TOTAL_MS) {
           const p = easeInOutQuart((elapsed - SLASH_MS - HOLD_MS) / OPEN_MS);
-          renderSlash(W, H, lerp(0.9, 1.85, p), lerp(0.068, 1.65, p), lerp(0.17, 1.15, p), lerp(15, 30, p));
+          renderSlash(lerp(0.9, 1.85, p), lerp(0.068, 1.65, p), lerp(0.17, 1.15, p), lerp(15, 30, p));
         } else {
           overlay.classList.add('opacity-0', 'invisible', 'pointer-events-none');
           window.dispatchEvent(new CustomEvent('aqua:intro-done'));
@@ -124,6 +126,6 @@
       };
 
       rafId = requestAnimationFrame(tick);
-    }, 830);
+    }, 720);
   }
 

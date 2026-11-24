@@ -35,30 +35,15 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* 开场蓝点扩张关键帧 */
+/* 只缩放一个小圆点，避免全屏裁切重绘。 */
 .blue-dot-layer {
-  background: radial-gradient(circle at 50% 45%, #2563eb 0%, #1a4bff 66%, #1e3a8a 100%);
-  clip-path: circle(8px at 50% 50%);
-  will-change: clip-path;
+  position: absolute; left: 50%; top: 50%;
+  width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  border-radius: 50%; background: #1a4bff;
 }
-
-.blue-dot-layer.is-expanding {
-  animation: expandBlueDot 0.86s forwards;
-}
-
-@keyframes expandBlueDot {
-  0% {
-    clip-path: circle(8px at 50% 50%);
-    animation-timing-function: ease-out;
-  }
-  18% {
-    clip-path: circle(12px at 50% 50%);
-    animation-timing-function: cubic-bezier(0.82, 0, 0.18, 1);
-  }
-  100% {
-    clip-path: circle(150% at 50% 50%);
-  }
-}
+.intro-running .blue-dot-layer { will-change: transform; }
+.intro-running .paper-grain { visibility: hidden; }
+#intro-overlay { contain: layout paint; }
 
 .is-skipped {
   display: none !important;
